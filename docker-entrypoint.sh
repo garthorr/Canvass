@@ -1,7 +1,7 @@
 #!/usr/bin/env sh
 set -eu
 
-DOCROOT="${CANVASS_DOCROOT:-/app}"
+DOCROOT="${CANVASS_DOCROOT:-/opt/canvass/site}"
 PORT="${CANVASS_PORT:-8100}"
 
 mkdir -p "$DOCROOT"

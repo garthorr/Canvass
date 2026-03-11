@@ -49,21 +49,21 @@ git push
 
 ## Troubleshooting directory listing at `/`
 
-If you still see a file listing instead of the app page, the most common causes are:
+If you still see a file listing instead of the app page, use this exact reset flow:
 
-1. **Old image is still running**
-   ```bash
-   docker ps
-   docker compose down
-   docker build --no-cache -t canvass .
-   docker run --rm -p 8100:8100 canvass
-   ```
-2. **A bind mount overwrote `/app` inside the container**
-   - If you run with `-v ...:/app`, make sure the mounted folder contains `index.html`.
-3. **Wrong URL/port**
-   - Use `http://localhost:8100/`.
+```bash
+docker compose down --remove-orphans
+docker compose build --no-cache
+docker compose up -d --force-recreate
+docker compose logs --tail=50
+```
 
-The container entrypoint now logs the exact document root it serves and creates a fallback `index.html` if one is missing, so you should no longer get a bare directory listing.
+Then open `http://localhost:8100/`.
+
+### Why this is more reliable now
+
+The image serves from `/opt/canvass/site` (not `/app`). So even if you bind-mount your repo into `/app`, it will still serve the image's landing page.
+The entrypoint also logs the active document root and creates a fallback `index.html` when missing.
 
 ## Resolving GitHub PR conflicts (Dockerfile/README/docker-compose)
 
@@ -86,7 +86,7 @@ git push --force-with-lease origin work
 
 Quick conflict strategy for this project:
 - Keep `8100` as the exposed/mapped port.
-- Keep `ENTRYPOINT ["/app/docker-entrypoint.sh"]` in `Dockerfile`.
+- Keep `ENTRYPOINT ["/usr/local/bin/canvass-entrypoint"]` in `Dockerfile`.
 - Keep the README troubleshooting section for directory listing issues.
 
 After push, GitHub will recompute the PR and the conflict warning should clear.
