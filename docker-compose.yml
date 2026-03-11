@@ -1,14 +1,8 @@
 services:
   canvass:
-    image: canvass:local
-    container_name: canvass-app
     build:
       context: .
       dockerfile: Dockerfile
-    environment:
-      CANVASS_DOCROOT: /opt/canvass/site
-      CANVASS_PORT: "8100"
-    entrypoint: ["/usr/local/bin/canvass-entrypoint"]
     ports:
-      - "8100:8100"
+      - "8300:8000"
     restart: unless-stopped
