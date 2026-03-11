@@ -18,6 +18,35 @@ Then open http://localhost:8100.
 docker compose up --build
 ```
 
+## One-time Git setup so `git pull` always gets `main`
+
+Run this once in your local clone on your Mac:
+
+```bash
+cd /path/to/Canvass
+git remote remove origin 2>/dev/null || true
+git remote add origin https://github.com/garthorr/Canvass.git
+git fetch origin
+git checkout -B main origin/main
+git branch --set-upstream-to=origin/main main
+git config pull.rebase true
+```
+
+After that, your normal update command is just:
+
+```bash
+git checkout main
+git pull
+```
+
+And to publish your own edits:
+
+```bash
+git add .
+git commit -m "your message"
+git push
+```
+
 ## Troubleshooting directory listing at `/`
 
 If you still see a file listing instead of the app page, the most common causes are:
@@ -35,7 +64,6 @@ If you still see a file listing instead of the app page, the most common causes 
    - Use `http://localhost:8100/`.
 
 The container entrypoint now logs the exact document root it serves and creates a fallback `index.html` if one is missing, so you should no longer get a bare directory listing.
-
 
 ## Resolving GitHub PR conflicts (Dockerfile/README/docker-compose)
 
