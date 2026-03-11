@@ -1,6 +1,7 @@
 # Canvass
 
 This repository is containerized to run as a self-contained Docker service.
+It now includes a default `index.html` entry page so loading the container shows an app page instead of a raw directory listing.
 
 ## Run with Docker
 
