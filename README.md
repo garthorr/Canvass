@@ -35,3 +35,30 @@ If you still see a file listing instead of the app page, the most common causes 
    - Use `http://localhost:8100/`.
 
 The container entrypoint now logs the exact document root it serves and creates a fallback `index.html` if one is missing, so you should no longer get a bare directory listing.
+
+
+## Resolving GitHub PR conflicts (Dockerfile/README/docker-compose)
+
+If GitHub shows **"This branch has conflicts that must be resolved"**, resolve them locally and push the updated branch:
+
+```bash
+# on your machine (repo with origin configured)
+git checkout work
+git fetch origin
+git rebase origin/main
+
+# if conflicts appear, keep the conflict markers visible files open and resolve them,
+# then continue:
+git add Dockerfile README.md docker-compose.yml
+git rebase --continue
+
+# update the PR branch after rebase
+git push --force-with-lease origin work
+```
+
+Quick conflict strategy for this project:
+- Keep `8100` as the exposed/mapped port.
+- Keep `ENTRYPOINT ["/app/docker-entrypoint.sh"]` in `Dockerfile`.
+- Keep the README troubleshooting section for directory listing issues.
+
+After push, GitHub will recompute the PR and the conflict warning should clear.
