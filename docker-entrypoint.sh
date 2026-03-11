@@ -6,8 +6,8 @@ PORT="${CANVASS_PORT:-8100}"
 
 mkdir -p "$DOCROOT"
 
-if [ ! -f "$DOCROOT/index.html" ]; then
-  echo "[canvass] WARNING: $DOCROOT/index.html not found; writing fallback landing page."
+if [ ! -f "$DOCROOT/index.html" ] && [ ! -f "$DOCROOT/index.htm" ]; then
+  echo "[canvass] WARNING: no index file found in $DOCROOT; writing fallback landing page."
   cat > "$DOCROOT/index.html" <<'HTML'
 <!doctype html>
 <html lang="en">
@@ -18,6 +18,7 @@ if [ ! -f "$DOCROOT/index.html" ]; then
   </body>
 </html>
 HTML
+  cp "$DOCROOT/index.html" "$DOCROOT/index.htm"
 fi
 
 echo "[canvass] serving $DOCROOT on 0.0.0.0:$PORT"

@@ -60,6 +60,18 @@ docker compose logs --tail=50
 
 Then open `http://localhost:8100/`.
 
+If you still get a directory listing, confirm you are really running the updated image:
+
+```bash
+docker compose down --remove-orphans
+docker compose build --no-cache
+docker compose up -d --force-recreate
+docker compose logs --tail=50
+curl -s http://localhost:8100/ | head -n 5
+```
+
+The HTML should start with `<!doctype html>` and include `Canvass`, not `Directory listing for /`.
+
 ### Why this is more reliable now
 
 The image serves from `/opt/canvass/site` (not `/app`). So even if you bind-mount your repo into `/app`, it will still serve the image's landing page.
